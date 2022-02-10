@@ -1,17 +1,21 @@
 // Import libraries
 const express = require('express')
 const mongoose = require("mongoose")
+const bodyParser = require('body-parser')
 
 // server application 
 var app = express()
+app.use( bodyParser.json() );       // to support JSON-encoded bodies
+app.use(bodyParser.urlencoded({     // to support URL-encoded bodies
+  extended: true
+})); 
 
 //const mongoUri = `mongodb+srv://${process.env.MONGODB_USER}:${process.env.MONGODB_PASSWORD}@${process.env.MONGODB_HOSTNAME}/${process.env.MONGODB_DATABASE}?retryWrites=true&w=majority`;
 const mongoUri = `mongodb+srv://moin:juicy123@cluster0.n8go0.mongodb.net/text-board?retryWrites=true&w=majority`;
 
 // MongoDB User Schema 
 const Text = mongoose.model('Text', mongoose.Schema({
-  message: String,
-  id: String
+  message: String
 }));
 
 mongoose.connect(mongoUri, { useNewUrlParser: true }, function (err, res) {
@@ -37,13 +41,17 @@ app.get('/api/texts', function (req, res) {
 
 // submit new text
 app.post('/api/text', function (req, res) {
+  console.log('request', req.body)
   var message = req.body.message
   new Text({
     message: message,
-    id: audio_id + "",
   }).save(function (err) { // save the message on the database
     if (err) return console.error(err);
-    console.log(`[MongoDB] saved to ${audio_id} database!`,)
+    console.log(`[MongoDB] saved to ${message} database!`,)
+    Text.find({}, function (err, texts) {
+      if (err) console.error(err)
+      res.json(texts)
+    })
   });
 })
 
