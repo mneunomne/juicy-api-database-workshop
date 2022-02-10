@@ -1,0 +1,23 @@
+{
+  "name": "juicy-api-database-workshop",
+  "version": "1.0.0",
+  "description": "template project for the juicy api database workshop",
+  "main": "server.js",
+  "scripts": {
+    "start": "nodemon server.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/mneunomne/juicy-api-database-workshop.git"
+  },
+  "author": "Alberto Harres",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/mneunomne/juicy-api-database-workshop/issues"
+  },
+  "homepage": "https://github.com/mneunomne/juicy-api-database-workshop#readme",
+  "dependencies": {
+    "express": "^4.17.2",
+    "mongoose": "^6.2.1"
+  }
+}
