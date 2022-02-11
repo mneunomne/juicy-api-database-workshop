@@ -1,0 +1,32 @@
+body {
+  text-align: center;
+  font-family: sans-serif;
+}
+
+.result {
+  font-size: 20px;
+  height: 80vh;
+  width: 100%;
+  max-width: 800px;
+  position: fixed;
+  left: 50%;
+  top: 130px;
+  transform: translate(-50%, 0);
+}
+
+.ui-draggable-dragging {
+  background-color: black;
+  color: white;
+}
+
+.draggable {
+  position: absolute;
+  display: inline-block;
+  touch-action: none;
+  user-select: none;
+  transform: translate(0px, 0px);
+}
+
+.draggable:hover {
+  text-decoration: underline;
+}
