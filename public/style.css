@@ -19,6 +19,10 @@ body {
   color: white;
 }
 
+.draggable:not(.ui-draggable-dragging) {
+  transition: all 0.2s;
+}
+
 .draggable {
   position: absolute;
   display: inline-block;
