@@ -125,6 +125,7 @@ socket.on('message_updated', function(data) {
 });
 
 socket.on('message_deleted', function(id) {
+  console.log("message_deleted", id)
   $(`#${id}`).remove()
 });
 
