@@ -1,5 +1,7 @@
 const socket = io();
 
+var context = null;
+
 // wait for document to get loaded to init
 $(document).ready(init)
 
@@ -7,6 +9,12 @@ function init() {
   getMessages()
   // add event listeners
   addEvents()
+  addDrawEvents()
+  initCanvas()
+}
+
+function initCanvas () {
+  context = document.getElementById("myCanvas").getContext("2d");
 }
 
 function getMessages() {
@@ -33,7 +41,7 @@ function addMessage(data) {
   var y = data.y
   var message = data.message
   $(".result").append(`
-    <div id="${id}" style="left: ${x}%; top: ${y}%;" class="draggable">
+    <div id="${id}" style="left: ${x}px; top: ${y}px;" class="draggable">
       <span>${message}</span>
     </div>
   `);
@@ -41,8 +49,8 @@ function addMessage(data) {
 
 // update position of a message
 function updateMessage(data) {
-  $(`#${data.id}`).css("left", data.x + "%");
-  $(`#${data.id}`).css("top", data.y + "%");
+  $(`#${data.id}`).css("left", data.x);
+  $(`#${data.id}`).css("top", data.y);
 }
 
 // delete message
@@ -75,6 +83,7 @@ function changeMessagePosition(id, x, y) {
 
 // submit new text from input element
 function submitText(text) {
+  var w = $(".result").width()
   var x = Math.random() * 100
   var y = Math.random() * 100
   var id = guid()
@@ -90,31 +99,24 @@ function submitText(text) {
       message: text
     }),
     success: function (data) {
-      console.log("done")
-      // updateData(data)
+      console.log("success!", data)
     },
     error: function () {
-      console.log('We are sorry but our servers are having an issue right now');
+      console.error('We are sorry but our servers are having an issue right now');
     }
   })
 }
 
 // set interaction events
 function setInteractionEvents() {
+  // set draggable event
   $(".draggable").draggable({
     containment: ".result",
-    start: function (evt) {
-      console.log("start", evt, evt.target.offsetLeft, evt.target.offsetTop)
-      this.startX = evt.target.offsetLeft
-      this.startY = evt.target.offsetTop
-    },
     stop: function (evt) {
-      console.log("end", evt, this.startX, this.startY, evt.offsetX, evt.offsetY)
-      var x = (100 * (parseFloat(evt.target.offsetLeft) / parseFloat($(this).parent().width())))
-      var y = (100 * (parseFloat(evt.target.offsetTop) / parseFloat($(this).parent().height())))
-      console.log("end 2 ", this.startX + evt.offsetX, this.startY + evt.offsetY)
-      $(this).css("left", x + "%");
-      $(this).css("top", y + "%");
+      var x = evt.target.offsetLeft
+      var y = evt.target.offsetTop
+      $(this).css("left", x + "px");
+      $(this).css("top", y + "px");
       changeMessagePosition(evt.target.id, x, y)
     }
   });
@@ -134,6 +136,13 @@ function addEvents() {
     $("#text").val('')
   })
 
+  $('#text').on('keyup', function (e) {
+    if (e.key === 'Enter' || e.keyCode === 13) {
+      submitText($("#text").val())
+      $("#text").val('')
+    }
+  });
+
   // Socket.io events
   socket.on('message_added', function (data) {
     addMessage(data)
@@ -151,6 +160,53 @@ function addEvents() {
   });
 }
 
+var isMouseDown = false;
+var pos_array = []
+function addDrawEvents () {
+  $('.result').mousedown(function (evt) {
+    console.log("mouse down", evt)
+    if (evt.target.className == "result") {
+      isMouseDown = true
+    }
+  })
+
+  $('.result').mouseup(function (evt) {
+    console.log("mouse up", pos_array.length)
+    if (isMouseDown) {
+      isMouseDown = false
+      if (pos_array.length > 0) {
+        displayDrawing(pos_array)
+        pos_array=[]
+      }
+    }
+  })
+
+  $('.result').mousemove(function (evt) {
+    if (isMouseDown && evt.target.className == "result") { 
+      var position = {
+        x: evt.offsetX, 
+        y: evt.offsetY
+      }
+      context.beginPath();
+      context.lineTo(position.x, position.y);
+      context.stroke();
+      // pos_array.push(position)
+    }
+  })
+
+  $('.result').mouseleave(function (evt) {
+    isMouseDown = false
+     context.stroke();
+  })
+}
+
+function displayDrawing (pos_array) {
+  context.beginPath();
+  for (var i in pos_array) {
+    context.lineTo(pos_array[i].x, pos_array[i].y);
+  }
+  context.stroke();
+}
 
 // unique id string generator
 let guid = () => {

@@ -1,17 +1,40 @@
 body {
   text-align: center;
-  font-family: sans-serif;
+  font-family: monospace;
+  background: white;
+}
+
+.submit-wrapper {
+  margin-top: 40px;
+}
+
+#paper {
+  height: 693px;
+  width: 535px;
+  position: fixed;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  filter: drop-shadow(6px 10px 21px rgba(0, 0, 0, 0.5));
+  background-image: url(https://d1csarkz8obe9u.cloudfront.net/posterpreviews/yellow-notebook-paper-background-design-template-d7dfa26f8c8c759652e2521f0ecd24eb_screen.jpg?ts=1636990781);
+  background-size: contain;
+}
+
+#myCanvas {
+  position: absolute;
+  top: 0;
+  left: 0;
+  pointer-events: none;
 }
 
 .result {
-  font-size: 20px;
-  height: 80vh;
+  font-size: 16px;
   width: 100%;
-  max-width: 800px;
-  position: fixed;
-  left: 50%;
-  top: 130px;
-  transform: translate(-50%, 0);
+  height: 100%;
+}
+
+.result span {
+  opacity: 0.8;
 }
 
 .ui-draggable-dragging {

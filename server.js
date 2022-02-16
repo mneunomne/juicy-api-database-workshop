@@ -106,6 +106,7 @@ app.delete('/api/text', function (req, res) {
     if (err) return handleError(err);
     console.log("document deleted")
     io.emit('message_deleted', id); // This will emit the event to all connected sockets
+    return res.send('Succesfully deleted.');
   });
 })
 

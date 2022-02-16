@@ -13,8 +13,13 @@
   <link rel="stylesheet" href="style.css">
 </head>
 <body>
-  <input id="text" type="text" maxlength="50" placeholder="write message here"> <button id="submit">submit</button><br><br>
-  <div class="result"></div>
+  <div class="submit-wrapper">
+    <input id="text" type="text" maxlength="50" placeholder="write message here"><button id="submit">submit</button><br><br>
+  </div>
+  <div id="paper">
+    <div class="result"></div>
+    <canvas id="myCanvas" width="535" height="693"></canvas>
+  </div>
   <script src="./script.js"></script>
 </body>
 </html>
