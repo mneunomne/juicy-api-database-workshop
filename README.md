@@ -1,4 +1,4 @@
-![cover](image.png)
+![cover](cover.png)
 
 # Juicy Api Database Workshop - Example project
 
