@@ -20,7 +20,7 @@ body {
   top: 50%;
   transform: translate(-50%, -50%);
   filter: drop-shadow(6px 10px 21px rgba(0, 0, 0, 0.5));
-  background-image: url(https://d1csarkz8obe9u.cloudfront.net/posterpreviews/yellow-notebook-paper-background-design-template-d7dfa26f8c8c759652e2521f0ecd24eb_screen.jpg?ts=1636990781);
+  background-image: url(./yellow_paper.png);
   background-size: contain;
 }
 
