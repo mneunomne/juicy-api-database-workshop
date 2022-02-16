@@ -1,5 +1,7 @@
 # Juicy Api Database Workshop - Template project
 
+Template project for the workshop "" as part of the [Juicy Workshops](https://github.com/digitalmediabremen/juicy-workshops) organized by the Digital Media Studio @ Hfk Bremen.
+
 ## Dependencies
 
 [express](https://www.npmjs.com/package/express)
