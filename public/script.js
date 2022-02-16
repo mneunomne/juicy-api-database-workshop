@@ -9,7 +9,6 @@ function init() {
   getMessages()
   // add event listeners
   addEvents()
-  addDrawEvents()
 }
 
 function getMessages() {
@@ -79,8 +78,9 @@ function changeMessagePosition(id, x, y) {
 // submit new text from input element
 function submitText(text) {
   var w = $(".result").width()
-  var x = Math.random() * 100
-  var y = Math.random() * 100
+  var h = $(".result").height()
+  var x = (Math.random() * w * 0.7)
+  var y = (Math.random() * h - 18)
   var id = guid()
   // POST request
   $.ajax({
