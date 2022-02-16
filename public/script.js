@@ -10,11 +10,6 @@ function init() {
   // add event listeners
   addEvents()
   addDrawEvents()
-  initCanvas()
-}
-
-function initCanvas () {
-  context = document.getElementById("myCanvas").getContext("2d");
 }
 
 function getMessages() {
@@ -158,54 +153,6 @@ function addEvents() {
     console.log("message_deleted", id)
     $(`#${id}`).remove()
   });
-}
-
-var isMouseDown = false;
-var pos_array = []
-function addDrawEvents () {
-  $('.result').mousedown(function (evt) {
-    console.log("mouse down", evt)
-    if (evt.target.className == "result") {
-      isMouseDown = true
-    }
-  })
-
-  $('.result').mouseup(function (evt) {
-    console.log("mouse up", pos_array.length)
-    if (isMouseDown) {
-      isMouseDown = false
-      if (pos_array.length > 0) {
-        displayDrawing(pos_array)
-        pos_array=[]
-      }
-    }
-  })
-
-  $('.result').mousemove(function (evt) {
-    if (isMouseDown && evt.target.className == "result") { 
-      var position = {
-        x: evt.offsetX, 
-        y: evt.offsetY
-      }
-      context.beginPath();
-      context.lineTo(position.x, position.y);
-      context.stroke();
-      // pos_array.push(position)
-    }
-  })
-
-  $('.result').mouseleave(function (evt) {
-    isMouseDown = false
-     context.stroke();
-  })
-}
-
-function displayDrawing (pos_array) {
-  context.beginPath();
-  for (var i in pos_array) {
-    context.lineTo(pos_array[i].x, pos_array[i].y);
-  }
-  context.stroke();
 }
 
 // unique id string generator
