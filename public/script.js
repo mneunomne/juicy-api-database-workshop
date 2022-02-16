@@ -1,61 +1,71 @@
 const socket = io();
 
-$( document ).ready(init)
+// wait for document to get loaded to init
+$(document).ready(init)
 
-function init () {
+function init() {
   getMessages()
+  // add event listeners
+  addEvents()
 }
 
-function getMessages () {
+function getMessages() {
   // simple get request
-  $.get("/api/texts", function( texts ) {
+  $.get("/api/texts", function (texts) {
     // iterate for each datapoint in the database
     updateData(texts)
   });
 }
 
-function updateData (texts) {
-  $( ".result" ).empty()
+// fill screen with the message elements
+function updateData(texts) {
+  $(".result").empty()
   for (var i in texts) {
     addMessage(texts[i])
   }
-  setInteract()
+  setInteractionEvents()
 }
 
-function addMessage (data) {
+// insert new message on display
+function addMessage(data) {
   var id = data.id
   var x = data.x
   var y = data.y
   var message = data.message
-  $( ".result" ).append(`
+  $(".result").append(`
     <div id="${id}" style="left: ${x}%; top: ${y}%;" class="draggable">
       <span>${message}</span>
     </div>
   `);
 }
 
-function updateMessage (data) {
+// update position of a message
+function updateMessage(data) {
   $(`#${data.id}`).css("left", data.x + "%");
   $(`#${data.id}`).css("top", data.y + "%");
 }
 
-function deleteMessage (id) {
+// delete message
+function deleteMessage(id) {
+  // DELETE request
   $.ajax({
     type: 'DELETE',
-    url: "/api/text",   
+    url: "/api/text",
     contentType: 'application/json',
-    data:  JSON.stringify({
+    data: JSON.stringify({
       id: id
     })
   })
 }
 
-function changeMessagePosition (id, x, y) {
+// send request to change position of message on the database
+function changeMessagePosition(id, x, y) {
+  // PUT request
   $.ajax({
     type: 'put',
-    url: "/api/text",   
+    url: "/api/text",
     contentType: 'application/json',
-    data:  JSON.stringify({
+    data: JSON.stringify({
       x: x,
       y: y,
       id: id
@@ -63,16 +73,17 @@ function changeMessagePosition (id, x, y) {
   })
 }
 
-
-function submitText (text) {
+// submit new text from input element
+function submitText(text) {
   var x = Math.random() * 100
   var y = Math.random() * 100
   var id = guid()
+  // POST request
   $.ajax({
     type: 'post',
-    url: "/api/text",   
+    url: "/api/text",
     contentType: 'application/json',
-    data:  JSON.stringify({
+    data: JSON.stringify({
       id: id,
       x: x,
       y: y,
@@ -88,8 +99,9 @@ function submitText (text) {
   })
 }
 
-function setInteract () {
-  $( ".draggable" ).draggable({
+// set interaction events
+function setInteractionEvents() {
+  $(".draggable").draggable({
     containment: ".result",
     start: function (evt) {
       console.log("start", evt, evt.target.offsetLeft, evt.target.offsetTop)
@@ -98,8 +110,8 @@ function setInteract () {
     },
     stop: function (evt) {
       console.log("end", evt, this.startX, this.startY, evt.offsetX, evt.offsetY)
-      var x = ( 100 * (parseFloat(evt.target.offsetLeft) / parseFloat($(this).parent().width())) )
-      var y = ( 100 * (parseFloat(evt.target.offsetTop) / parseFloat($(this).parent().height())) )
+      var x = (100 * (parseFloat(evt.target.offsetLeft) / parseFloat($(this).parent().width())))
+      var y = (100 * (parseFloat(evt.target.offsetTop) / parseFloat($(this).parent().height())))
       console.log("end 2 ", this.startX + evt.offsetX, this.startY + evt.offsetY)
       $(this).css("left", x + "%");
       $(this).css("top", y + "%");
@@ -107,40 +119,43 @@ function setInteract () {
     }
   });
 
-  $( ".draggable" ).dblclick(function (evt) {
+  $(".draggable").dblclick(function (evt) {
     console.log("delete", $(this)[0].id)
     deleteMessage($(this)[0].id)
     $(this).remove()
   })
 }
 
-socket.on('message_added', function(data) {
-  addMessage(data)
-  setInteract()
-});
+function addEvents() {
+  // interaction events
+  $('#submit').click(function (evt) {
+    console.log('text', $("#text").val())
+    submitText($("#text").val())
+    $("#text").val('')
+  })
 
-socket.on('message_updated', function(data) {
-  updateMessage(data)
-  console.log("data", data)
-});
+  // Socket.io events
+  socket.on('message_added', function (data) {
+    addMessage(data)
+    setInteractionEvents()
+  });
 
-socket.on('message_deleted', function(id) {
-  console.log("message_deleted", id)
-  $(`#${id}`).remove()
-});
+  socket.on('message_updated', function (data) {
+    updateMessage(data)
+    console.log("data", data)
+  });
 
-$('#submit').click(function (evt) {
-  console.log('text',  $("#text").val())
-  submitText($("#text").val())
-  $("#text").val('')
-})
+  socket.on('message_deleted', function (id) {
+    console.log("message_deleted", id)
+    $(`#${id}`).remove()
+  });
+}
 
 
+// unique id string generator
 let guid = () => {
   let s4 = () => {
-      return Math.floor((1 + Math.random()) * 0x10000)
-          .toString(16)
-          .substring(1);
+    return Math.floor((1 + Math.random()) * 0x10000).toString(16).substring(1);
   }
   return s4() + s4() + '-' + s4() + '-' + s4() + '-' + s4() + '-' + s4() + s4() + s4();
 }

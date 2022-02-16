@@ -35,8 +35,9 @@ const Text = mongoose.model('Text', mongoose.Schema({
   y: Number
 }));
 
-mongoose.connect(mongoUri, { useNewUrlParser: true }, function (err, res) {
-  // if there are any errors, print it
+// connect to MongoDB
+mongoose.connect(mongoUri, { useNewUrlParser: true }, function (err) {
+  // if there are any errors, print it 
   if (err) {
     console.error(err)
     throw err
@@ -46,7 +47,6 @@ mongoose.connect(mongoUri, { useNewUrlParser: true }, function (err, res) {
 
 // here we make available the folder "public" to be access
 app.use(express.static('public'))
-
 
 // get all texts
 app.get('/api/texts', function (req, res) {
@@ -68,45 +68,44 @@ app.post('/api/text', function (req, res) {
     message: message,
     x: x,
     y: y
-  } 
-  new Text(data).save(function (err) { // save the message on the database
+  }
+  // create next "Text" object and save it to the database
+  new Text(data).save(function (err) {
+    // if there is any error, return function
     if (err) return console.error(err);
-    console.log(`[MongoDB] saved to ${message} database!`,)
-    Text.find({}, function (err, texts) {
-      if (err) console.error(err)
-      // send update to everyone
-      io.emit('message_added', data); // This will emit the event to all connected sockets
-      // return the new array to the post request 
-      res.json(texts)
-    })
+    console.log(`[MongoDB] saved to ${message} database!`)
+    io.emit('message_added', data);
+    // return response with the new audio data
+    res.json(data)
   });
 })
 
+// edit information on a Text element on the database
 app.put('/api/text', function (req, res) {
+  // get parameters
   var id = req.body.id
   var x = parseFloat(req.body.x)
   var y = parseFloat(req.body.y)
   var data = {id, x, y}
+  // filter to find the Text element to be editted
   const filter = {"id": id}
+  // new information to be inserted
   const update = { $set :{ "x": x, "y": y } };
-  let doc = Text.findOneAndUpdate(filter, update, {
-    upsert: true,
-  }, function(err, doc) {
+  Text.findOneAndUpdate(filter, update, function(err, doc) {
     if (err) return res.send(500, {error: err});
     io.emit('message_updated', data); // This will emit the event to all connected sockets
     return res.send('Succesfully saved.');
   }); 
 })
 
+// delete Text element from the database
 app.delete('/api/text', function (req, res) {
   var id = req.body.id
-  console.log("id", id)
   const filter = {"id": id}
   Text.deleteOne(filter, function (err) {
     if (err) return handleError(err);
     console.log("document deleted")
-    io.emit('message_deleted', id);
-    // deleted at most one tank document
+    io.emit('message_deleted', id); // This will emit the event to all connected sockets
   });
 })
 
