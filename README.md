@@ -1,13 +1,13 @@
-# Juicy Api Database Workshop - Template project
+# Juicy Api Database Workshop - Example project
 
-Template project for the workshop "" as part of the [Juicy Workshops](https://github.com/digitalmediabremen/juicy-workshops) organized by the Digital Media Studio @ Hfk Bremen.
+Example project for the workshop *"API & Databases in the Artistic Context using Node.js"* as part of the [Juicy Workshops](https://github.com/digitalmediabremen/juicy-workshops) organized by the Digital Media Studio @ Hfk Bremen.
 
 ## Dependencies
 
-[express](https://www.npmjs.com/package/express)
-[mongoose](https://www.npmjs.com/package/mongoose)
-[nodemon](https://www.npmjs.com/package/nodemon)
-[socket.io](https://socket.io/)
+- [express](https://www.npmjs.com/package/express)
+- [mongoose](https://www.npmjs.com/package/mongoose)
+- [nodemon](https://www.npmjs.com/package/nodemon)
+- [socket.io](https://socket.io/)
 
 ## Setup
 
