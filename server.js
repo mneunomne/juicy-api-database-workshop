@@ -24,8 +24,8 @@ app.use(bodyParser.urlencoded({     // to support URL-encoded bodies
   extended: true
 })); 
 
-//const mongoUri = `mongodb+srv://${process.env.MONGODB_USER}:${process.env.MONGODB_PASSWORD}@${process.env.MONGODB_HOSTNAME}/${process.env.MONGODB_DATABASE}?retryWrites=true&w=majority`;
-const mongoUri = `mongodb+srv://moin:juicy123@cluster0.n8go0.mongodb.net/text-board?retryWrites=true&w=majority`;
+//const mongoUri = `mongodb+srv://moin:juicy123@cluster0.n8go0.mongodb.net/text-board?retryWrites=true&w=majority`;
+const mongoUri = `mongodb+srv://${process.env.MONGODB_USERNAME}:${process.env.MONGODB_PASSWORD}@${process.env.MONGODB_CLUSTER}.n8go0.mongodb.net/${process.env.MONGODB_COLLECTION}?retryWrites=true&w=majority`;
 
 // MongoDB User Schema 
 const Text = mongoose.model('Text', mongoose.Schema({
