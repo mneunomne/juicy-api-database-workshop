@@ -1,2 +1,4 @@
 # folder with installed packages
 node_modules/
+# env variables
+.env
