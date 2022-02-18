@@ -17,6 +17,22 @@ Example project for the workshop *"API & Databases in the Artistic Context using
 npm install
 ```
 
+Create `.env` file.
+
+```
+touch .env
+```
+
+And fill the following fields:
+
+```
+PORT=
+MONGODB_CLUSTER=
+MONGODB_USERNAME=
+MONGODB_PASSWORD=
+MONGODB_COLLECTION=
+```
+
 ## Run
 
 ```
